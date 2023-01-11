@@ -8,7 +8,7 @@ from math import sin, cos, pi
 
 WIN_SIZE = 1280, 720
 WIN_WIDTH, WIN_HEIGHT = WIN_SIZE
-TARGET_FPS = 60
+TARGET_FPS = 0
 
 
 class Application:
@@ -23,18 +23,22 @@ class Application:
         amplitude = 10
         # offset = 150, 150
         period = 1
-        self.total_samples = 44100
+        self.total_samples = 2500  # few thousands is ok; 1k is dotted
         self.local_xs = np.linspace(0, 100 * pi, self.total_samples)  # + offset[0]
         self.local_ys = amplitude * np.sin(self.local_xs / period)  # + offset[1]
 
         self.wrap_around_circle = [(WIN_WIDTH // 2, WIN_HEIGHT // 2), 250]
         self.angles = np.linspace(0, 360, self.total_samples)
+        self.current_angle = 0
 
     def run(self):
         self.is_running = True
         while self.is_running:
 
-            frame_time = self.clock.tick(TARGET_FPS)
+            frame_time_ms = self.clock.tick(TARGET_FPS)
+            frame_time_s = frame_time_ms / 1000.
+
+            print(f"FPS: {self.clock.get_fps():.2f}")
 
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -43,11 +47,14 @@ class Application:
                     if event.key == K_ESCAPE:
                         self.stop()
 
+            self.current_angle += 10 * frame_time_s
+
             self.surface.fill((255, 255, 255))
             # circle
             # for angle in range(0, 360, 15):
             i = 0
             for angle in self.angles:
+                angle += self.current_angle
                 pygame.draw.circle(self.surface,
                                    (0, 0, 0),
                                    (self.wrap_around_circle[0][0] + cos(angle / 180 * pi) * (self.wrap_around_circle[1] + self.local_ys[i]),
