@@ -20,11 +20,12 @@ class Application:
         self.is_running = False
 
         # sin to circle
-        amplitude = 100
+        amplitude = 10
         # offset = 150, 150
+        period = 1
         self.total_samples = 44100
-        self.local_xs = np.linspace(0, 100 * pi, self.total_samples)  #+ offset[0]
-        self.local_ys = amplitude * np.sin(self.local_xs / 16)  # + offset[1]
+        self.local_xs = np.linspace(0, 100 * pi, self.total_samples)  # + offset[0]
+        self.local_ys = amplitude * np.sin(self.local_xs / period)  # + offset[1]
 
         self.wrap_around_circle = [(WIN_WIDTH // 2, WIN_HEIGHT // 2), 250]
         self.angles = np.linspace(0, 360, self.total_samples)
@@ -33,7 +34,7 @@ class Application:
         self.is_running = True
         while self.is_running:
 
-            frame_time = self.clock.tick()
+            frame_time = self.clock.tick(TARGET_FPS)
 
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -49,7 +50,7 @@ class Application:
             for angle in self.angles:
                 pygame.draw.circle(self.surface,
                                    (0, 0, 0),
-                                   (self.wrap_around_circle[0][0] + cos(angle / 180 * pi) * self.wrap_around_circle[1],
+                                   (self.wrap_around_circle[0][0] + cos(angle / 180 * pi) * (self.wrap_around_circle[1] + self.local_ys[i]),
                                     self.wrap_around_circle[0][1] + sin(angle / 180 * pi) * (self.wrap_around_circle[1] + self.local_ys[i])),
                                    1
                                    )
