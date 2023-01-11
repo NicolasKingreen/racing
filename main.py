@@ -20,7 +20,7 @@ class Application:
         self.is_running = False
 
         # sin to circle
-        amplitude = 10
+        amplitude = 10  # ==100 is crazy
         # offset = 150, 150
         period = 1
         self.total_samples = 2500  # few thousands is ok; 1k is dotted
