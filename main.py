@@ -66,8 +66,8 @@ class Application:
                 angle += self.current_angle
                 pygame.draw.circle(self.surface,
                                    (0, 0, 0),
-                                   (self.wrap_around_circle[0][0] + cos(angle / 180 * pi) * (self.wrap_around_circle[1] + self.local_ys[i]),
-                                    self.wrap_around_circle[0][1] + sin(angle / 180 * pi) * (self.wrap_around_circle[1] + self.local_ys[i])),
+                                   (self.wrap_around_circle[0][0] + cos(angle / 180 * pi) * (self.wrap_around_circle[1] + self.local_ys[i]),  # 360 vs 180
+                                    self.wrap_around_circle[0][1] + sin(angle / 180 * pi) * (self.wrap_around_circle[1] + self.local_ys[i])),  # 1 vs 180
                                    1
                                    )
                 i += 1
