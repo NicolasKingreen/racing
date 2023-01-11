@@ -27,9 +27,15 @@ class Application:
         self.local_xs = np.linspace(0, 100 * pi, self.total_samples)  # + offset[0]
         self.local_ys = amplitude * np.sin(self.local_xs / period)  # + offset[1]
 
-        self.wrap_around_circle = [(WIN_WIDTH // 2, WIN_HEIGHT // 2), 250]
         self.angles = np.linspace(0, 360, self.total_samples)
         self.current_angle = 0
+        self.angular_speed = 10  # in deg
+
+        self.min_radius = 100
+        self.max_radius = 250
+        self.shrink_speed = 10
+
+        self.wrap_around_circle = [(WIN_WIDTH // 2, WIN_HEIGHT // 2), self.min_radius]
 
     def run(self):
         self.is_running = True
@@ -47,7 +53,10 @@ class Application:
                     if event.key == K_ESCAPE:
                         self.stop()
 
-            self.current_angle += 10 * frame_time_s
+            self.current_angle += self.angular_speed * frame_time_s
+            if self.wrap_around_circle[1] > self.max_radius or self.wrap_around_circle[1] < self.min_radius:
+                self.shrink_speed *= -1
+            self.wrap_around_circle[1] += self.shrink_speed * frame_time_s
 
             self.surface.fill((255, 255, 255))
             # circle
